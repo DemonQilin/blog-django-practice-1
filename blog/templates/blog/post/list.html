@@ -7,7 +7,7 @@
 
     {% for post in posts %}
         <h2>
-            <a href="{% url 'blog:post_detail' post.id %}" target="_blank" rel="noopener noreferrer">
+            <a href="{% url 'blog:post_detail' post.id %}">
                 {{ post.title }}
             </a>
         </h2>
