@@ -1,12 +1,16 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 
 from .models import Post
 
 def post_list(request: HttpRequest) -> HttpResponse:
     posts = Post.published.all()
+    paginator = Paginator(posts, 3)
+    page_number = request.GET.get('page', 1)
+    paginated_posts = paginator.page(page_number)
 
-    return render(request, 'blog/post/list.html', { 'posts': posts })
+    return render(request, 'blog/post/list.html', { 'posts': paginated_posts })
 
 
 def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str) -> HttpResponse:
