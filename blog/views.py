@@ -1,22 +1,19 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic import ListView
 
 from .models import Post
 
-def post_list(request: HttpRequest) -> HttpResponse:
-    posts = Post.published.all()
-    paginator = Paginator(posts, 3)
-    page_number = request.GET.get('page', 1)
 
-    try:
-        paginated_posts = paginator.page(page_number)
-    except PageNotAnInteger:
-        paginated_posts = paginator.page(1)
-    except EmptyPage:
-        paginated_posts = paginator.page(paginator.num_pages)
-
-    return render(request, 'blog/post/list.html', { 'posts': paginated_posts })
+class PostListView(ListView):
+    """
+    Alternative post list view
+    """
+    queryset = Post.published.all()
+    context_object_name = 'posts'
+    paginate_by = 3
+    template_name = 'blog/post/list.html'
 
 
 def post_detail(request: HttpRequest, year: int, month: int, day: int, post: str) -> HttpResponse:
